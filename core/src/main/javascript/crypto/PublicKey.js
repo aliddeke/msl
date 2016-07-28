@@ -63,6 +63,8 @@ var PublicKey$import;
 
             function createKey(encoded) {
                 AsyncExecutor(callback, function() {
+                    console.log("CREATEKEY")
+                    console.log(encoded)
                     // The properties.
                     var props = {
                         rawKey: { value: rawKey, writable: false, configurable: false },
@@ -104,28 +106,26 @@ var PublicKey$import;
      * Creates a public key from the provided key data. The key's
      * byte encoding will be available.
      *
-     * @param {string|Uint8Array} spki Base64-encoded or raw SPKI.
+     * @param {string|Uint8Array|JSON} input Base64-encoded, Raw or JSON key data (SPKI|JWK).
      * @param {WebCryptoAlgorithm} algo Web Crypto algorithm.
      * @param {WebCryptoUsage} usages Web Crypto key usages.
+     * @param {KeyFormat} format format of the key to import.
      * @param {{result: function(PublicKey), error: function(Error)}}
      *        callback the callback will receive the new public key
      *        or any thrown exceptions.
      * @throws MslCryptoException if the key data is invalid.
      */
-    PublicKey$import = function PublicKey$import(spki, algo, usages, callback) {
+    PublicKey$import = function PublicKey$import(input, algo, usages, format, callback) {
         AsyncExecutor(callback, function() {
-            try {
-                spki = (typeof spki == "string") ? base64$decode(spki) : spki;
-            } catch (e) {
-                throw new MslCryptoException(MslError.INVALID_PUBLIC_KEY, "spki " + spki, e);
-            }
+            input = KeyFormat.pubkeyToUint8Array(input, format);
             var oncomplete = function(result) {
-                new PublicKey(result, callback, spki);
+                new PublicKey(result, callback, input);
             };
             var onerror = function(e) {
                 callback.error(new MslCryptoException(MslError.INVALID_PUBLIC_KEY));
             };
-            mslCrypto['importKey']("spki", spki, algo, true, usages)
+            console.log(format);
+            mslCrypto['importKey'](format, input, algo, true, usages)
                 .then(oncomplete, onerror);
         });
     };

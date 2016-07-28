@@ -85,30 +85,23 @@ describe("EccCryptoContext", function() {
                 var _algo = WebCryptoAlgorithm.ECDSA_SHA256;
                 _algo['namedCurve'] = ECDSA_KEYPAIR_A.publicKeyJSON['crv'];
                 
-                mslCrypto["importKey"]("jwk", ECDSA_KEYPAIR_A.publicKeyJSON, _algo, extractable, ["verify"])
-                    .then(function (key) {
-                        publicKeyA = key;
-                    },
-                    function(e) { expect(function() { throw e; }).not.toThrow(); }
-                );
-                mslCrypto["importKey"]("jwk", ECDSA_KEYPAIR_A.privateKeyJSON, _algo, extractable, ["sign"])
-                    .then(function (key) {
-                        privateKeyA = key;
-                    },
-                    function(e) { expect(function() { throw e; }).not.toThrow(); }
-                );
-                mslCrypto["importKey"]("jwk", ECDSA_KEYPAIR_B.publicKeyJSON, _algo, extractable, ["verify"])
-                    .then(function (key) {
-                        publicKeyB = key;
-                    },
-                    function(e) { expect(function() { throw e; }).not.toThrow(); }
-                );
-                mslCrypto["importKey"]("jwk", ECDSA_KEYPAIR_B.privateKeyJSON, _algo, extractable, ["sign"])
-                    .then(function (key) {
-                        privateKeyB = key;
-                    },
-                    function(e) { expect(function() { throw e; }).not.toThrow(); }
-                );
+                PublicKey$import(ECDSA_KEYPAIR_A.publicKeyJSON, WebCryptoAlgorithm.ECDSA_SHA256, WebCryptoUsage.VERIFY, "jwk", {
+                    result: function (pubkey) { publicKeyA = pubkey; },
+                    error:  function(e) { expect(function() { throw e; }).not.toThrow(); }
+                });
+                PrivateKey$import(ECDSA_KEYPAIR_A.privateKeyJSON, WebCryptoAlgorithm.ECDSA_SHA256, WebCryptoUsage.SIGN, "jwk", {
+                    result: function (privkey) { privateKeyA = privkey; },
+                    error:  function(e) { expect(function() { throw e; }).not.toThrow(); }
+                });
+                PublicKey$import(ECDSA_KEYPAIR_B.publicKeyJSON, WebCryptoAlgorithm.ECDSA_SHA256, WebCryptoUsage.VERIFY, "jwk", {
+                    result: function (pubkey) { publicKeyB = pubkey; },
+                    error:  function(e) { expect(function() { throw e; }).not.toThrow(); }
+                });
+
+                PrivateKey$import(ECDSA_KEYPAIR_B.privateKeyJSON, WebCryptoAlgorithm.ECDSA_SHA256, WebCryptoUsage.SIGN, "jwk", {
+                    result: function (privkey) { privateKeyB = privkey; },
+                    error:  function(e) { expect(function() { throw e; }).not.toThrow(); }
+                });
             });
             waitsFor(function() { return publicKeyA && privateKeyA && publicKeyB && privateKeyB; }, "Import ECDSA keypairs A/B", 1500);
             runs(function() { initialized = true; });

@@ -51,7 +51,7 @@ var MslTestUtils$Algorithm;
          *        callback the callback that will receive the RSA key pair or
          *        any thrown exceptions.
          */
-        generateRsaKeys: function generateRsaKeys(algo, usages, length, callback) {
+        generateRsaKeys: function (algo, usages, length, callback) {
             AsyncExecutor(callback, function() {
                 var oncomplete = function(result) {
                     PrivateKey$create(result.privateKey, {
@@ -89,7 +89,7 @@ var MslTestUtils$Algorithm;
          *        callback the callback that will receive the Diffie-Hellman key
          *        pair or any thrown exceptions.
          */
-        generateDiffieHellmanKeys: function generateDiffieHellmanKeys(params, callback) {
+        generateDiffieHellmanKeys: function (params, callback) {
             AsyncExecutor(callback, function() {
                 var oncomplete = function(keyPair) {
                     callback.result(keyPair.publicKey, keyPair.privateKey);
@@ -120,7 +120,7 @@ var MslTestUtils$Algorithm;
 	     * @throws MslCryptoException if there is an error encrypting or signing
 	     *         the token data.
 	     */
-	    getMasterToken: function getMasterToken(ctx, sequenceNumber, serialNumber, callback) {
+	    getMasterToken: function (ctx, sequenceNumber, serialNumber, callback) {
 	    	AsyncExecutor(callback, function() {
 		        var renewalWindow = new Date(Date.now() + 10000);
 		        var expiration = new Date(Date.now() + 20000);
@@ -152,7 +152,7 @@ var MslTestUtils$Algorithm;
 	     * @throws MslException if the master token is constructed incorrectly.
 	     * @throws JSONException if there is an error editing the JSON data.
 	     */
-	    getUntrustedMasterToken: function getUntrustedMasterToken(ctx, callback) {
+	    getUntrustedMasterToken: function (ctx, callback) {
 	    	AsyncExecutor(callback, function() {
 		        var renewalWindow = new Date(Date.now() + 10000);
 		        var expiration = new Date(Date.now() + 20000);
